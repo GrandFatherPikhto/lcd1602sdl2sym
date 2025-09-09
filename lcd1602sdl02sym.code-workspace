@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"lcd1602_sdl_types.h": "c",
+			"string.h": "c"
+		}
+	}
+}
