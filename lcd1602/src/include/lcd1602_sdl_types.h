@@ -21,6 +21,19 @@ typedef enum {
     EVT_QUIT
 } sdl_event_type_t;
 
+typedef enum {
+    LCD_EVENT_NONE,
+    LCD_PUSH_BUTTON,
+    LCD_LONG_PUSH_BUTTON,
+    LCD_DOUBLE_CLICK_BUTTON,
+    LCD_CHANGE_POS
+} lcd_event_id;
+
+typedef struct lcd_event {
+    lcd_event_id event;
+    int pos;
+} lcd_event_t;
+
 typedef struct {
     sdl_event_type_t type;
     union {
@@ -61,11 +74,15 @@ typedef struct lcd1602_handle {
     bool blink; 
     int contrast; 
     int pos;
+    uint8_t debounce;
 } lcd1602_handle_t;
 
 typedef struct thread_context {
     SDL_Window *win;
     sdl_event_queue_t *queue;
+    SDL_mutex *mutex;
+    SDL_cond *cond;
+    bool ended;
     bool *running;
 } thread_context_t;
 
@@ -84,7 +101,13 @@ typedef struct sdl_handle {
     sdl_event_queue_t *queue;
     thread_context_t *thread_ctx;
 
+    void (*position_cb)(int);
+    void (*push_button_cb)(void);
+    void (*long_push_button_cb)(void);
+    void (*double_click_cb)(void);
+
     bool running;
+    
     bool dirty;
 } sdl_handle_t;
 
