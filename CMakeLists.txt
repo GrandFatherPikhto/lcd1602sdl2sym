@@ -6,6 +6,7 @@ include(CTest)
 enable_testing()
 
 # Добавляем подпроекты
+add_subdirectory(main)
 add_subdirectory(lcd1602)
 # add_subdirectory(tests)
 

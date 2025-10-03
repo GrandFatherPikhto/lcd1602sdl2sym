@@ -18,6 +18,7 @@ typedef struct sdl_handle {
     SDL_Window *window;
     SDL_Renderer *renderer;
     TTF_Font *font;
+    TTF_Font *small_font;
     lcd1602_handle_t *lcd;
     
     void (*position_cb)(int);
@@ -89,12 +90,20 @@ sdl_handle_t *lcd1602_sdl_create(const char *title, int width, int height) {
         return NULL;
     }
 
-    // Загрузка шрифта
+    // Загрузка шрифтов
     handle->font = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 20);
     if (!handle->font) {
         handle->font = TTF_OpenFont("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 20);
         if (!handle->font) {
             printf("Font loading failed, using default\n");
+        }
+    }
+
+    handle->small_font = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", 12);
+    if (!handle->small_font) {
+        handle->small_font = TTF_OpenFont("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 12);
+        if (!handle->small_font) {
+            printf("Small font loading failed, using default\n");
         }
     }
 
@@ -153,6 +162,32 @@ static void s_handle_sdl_event(sdl_handle_t *handle, SDL_Event *e) {
     }
 }
 
+static void s_sdl_render_hint(sdl_handle_t *handle) {
+    if (handle->small_font) {
+        SDL_Color hint_color = {150, 150, 150, 255};
+        const char *hint_line1 = "Enter:Click L:Long D:Double Q:Exit";
+        const char *hint_line2 = "Up/Down:Rotate";
+
+        SDL_Surface *surface1 = TTF_RenderText_Solid(handle->small_font, hint_line1, hint_color);
+        if (surface1) {
+            SDL_Texture *texture1 = SDL_CreateTextureFromSurface(handle->renderer, surface1);
+            SDL_Rect rect1 = {20, 110, surface1->w, surface1->h};
+            SDL_RenderCopy(handle->renderer, texture1, NULL, &rect1);
+            SDL_FreeSurface(surface1);
+            SDL_DestroyTexture(texture1);
+        }
+
+        SDL_Surface *surface2 = TTF_RenderText_Solid(handle->small_font, hint_line2, hint_color);
+        if (surface2) {
+            SDL_Texture *texture2 = SDL_CreateTextureFromSurface(handle->renderer, surface2);
+            SDL_Rect rect2 = {20, 125, surface2->w, surface2->h};
+            SDL_RenderCopy(handle->renderer, texture2, NULL, &rect2);
+            SDL_FreeSurface(surface2);
+            SDL_DestroyTexture(texture2);
+        }
+    }
+}
+
 static void s_sdl_render(sdl_handle_t *handle) {
     // Очистка
     SDL_SetRenderDrawColor(handle->renderer, 40, 40, 40, 255);
@@ -182,6 +217,8 @@ static void s_sdl_render(sdl_handle_t *handle) {
         }
     }
     
+    s_sdl_render_hint(handle);
+
     SDL_RenderPresent(handle->renderer);
 }
 

@@ -153,13 +153,34 @@ void lcd1602_sdl_set_debounce(sdl_handle_t* handle, uint8_t debounce);
 
 ```
 lcd1602sdl02sym/
-├── src/
-│   ├── lcd1602_sdl.h/c     # Основной код симулятора
-│   ├── lcd1602_sdl_types.h # Определения типов
-│   ├── utils.h/c           # Вспомогательные функции
-│   └── main.c              # Пример использования
-├── CMakeLists.txt          # Конфигурация сборки
-└── LCD1602Config.cmake     # Конфигурация пакета
+├── CMakeLists.txt
+├── README.md
+├── cmake
+│   ├── LCD1602Config.cmake
+│   └── lcd1602-config.cmake
+├── lcd1602
+│   ├── CMakeLists.txt
+│   └── src
+│       ├── include
+│       │   ├── lcd1602_sdl.h
+│       │   ├── lcd1602_sdl_types.h
+│       │   └── utils.h
+│       ├── lcd1602_sdl.c
+│       └── utils.c
+├── lcd1602sdl02sym.code-workspace
+├── main
+│   ├── CMakeLists.txt
+│   └── src
+│       ├── include
+│       └── main.c
+├── resources
+│   ├── 5x8_lcd_hd44780u_a02
+│   │   └── 5x8_LCD_HD44780U_A02
+│   │       ├── 5x8_lcd_hd44780u_a02.ttf
+│   │       ├── 5x8_lcd_hd44780u_a02.ttf:Zone.Identifier
+│   │       ├── readme.txt
+│   │       └── readme.txt:Zone.Identifier
+│   └── lcd_font.ttf
 ```
 
 ## Отладка

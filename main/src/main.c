@@ -3,26 +3,49 @@
 #include <unistd.h>
 #include <signal.h>
 #include <execinfo.h>
+#include <stdio.h>
+#include <string.h>
+
+#define LCD_STRING_LEN 0x10
+
+char s_title_buf[LCD_STRING_LEN] = { 0 };
+char s_value_buf[LCD_STRING_LEN] = { 0 };
 
 // Callback-функции
 void on_position_change(int new_pos) {
     printf("Position changed: %d\n", new_pos);
     // Здесь обновляем меню или что-то еще
+    memset(s_title_buf, 0, LCD_STRING_LEN);
+    memset(s_value_buf, 0, LCD_STRING_LEN);
+    snprintf(s_title_buf, LCD_STRING_LEN, "Position");
+    snprintf(s_value_buf, LCD_STRING_LEN, "Value: %d", new_pos);
 }
 
 void on_push_button() {
     printf("Button pushed\n");
     // Обработка короткого нажатия
+    memset(s_title_buf, 0, LCD_STRING_LEN);
+    memset(s_value_buf, 0, LCD_STRING_LEN);
+    snprintf(s_title_buf, LCD_STRING_LEN, "Button");
+    snprintf(s_value_buf, LCD_STRING_LEN, "Click");
 }
 
 void on_long_push_button() {
     printf("Long button push\n");
     // Обработка длинного нажатия
+    memset(s_title_buf, 0, LCD_STRING_LEN);
+    memset(s_value_buf, 0, LCD_STRING_LEN);
+    snprintf(s_title_buf, LCD_STRING_LEN, "Button");
+    snprintf(s_value_buf, LCD_STRING_LEN, "Long Click");
 }
 
 void on_double_click() {
     printf("Double click\n");
     // Обработка двойного нажатия
+    memset(s_title_buf, 0, LCD_STRING_LEN);
+    memset(s_value_buf, 0, LCD_STRING_LEN);
+    snprintf(s_title_buf, LCD_STRING_LEN, "Button");
+    snprintf(s_value_buf, LCD_STRING_LEN, "Double Click");
 }
 
 bool menu_is_dirty(void) {
@@ -30,7 +53,11 @@ bool menu_is_dirty(void) {
 }
 
 void menu_draw(sdl_handle_t *lcd) {
-    
+    lcd_sdl_clear(lcd);
+    lcd_sdl_set_cursor(lcd, 0, 0);
+    lcd_sdl_print_str(lcd, s_title_buf);
+    lcd_sdl_set_cursor(lcd, 0, 1);
+    lcd_sdl_print_str(lcd, s_value_buf);
 }
 
 int main() {

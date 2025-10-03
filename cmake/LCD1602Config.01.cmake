@@ -11,7 +11,7 @@ find_path(LCD1602_INCLUDE_DIR
 
 # Поиск библиотеки
 find_library(LCD1602_LIBRARY
-    NAMES LCD1602
+    NAMES lcd1602
     PATHS /home/yevst/Projects/CCPP/lcd1602sdl02sym/build/lcd1602
     NO_DEFAULT_PATH
 )
